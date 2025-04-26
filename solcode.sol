@@ -65,4 +65,64 @@ contract KYCVerification {
     function getAllUsers() public view returns (address[] memory) {
         return userAddresses;
     }
+
+    // ✅ Get all verified users
+    function getVerifiedUsers() public view returns (address[] memory) {
+        uint count = 0;
+        for (uint i = 0; i < userAddresses.length; i++) {
+            if (users[userAddresses[i]].isVerified) {
+                count++;
+            }
+        }
+
+        address[] memory verifiedUsers = new address[](count);
+        uint index = 0;
+
+        for (uint i = 0; i < userAddresses.length; i++) {
+            if (users[userAddresses[i]].isVerified) {
+                verifiedUsers[index] = userAddresses[i];
+                index++;
+            }
+        }
+
+        return verifiedUsers;
+    }
+
+    // ✅ Transfer admin role
+    function transferAdmin(address newAdmin) public onlyAdmin {
+        require(newAdmin != address(0), "Invalid address");
+        admin = newAdmin;
+    }
+
+    // ✅ Check if user exists
+    function isUserExists(address userAddress) public view returns (bool) {
+        return bytes(users[userAddress].name).length != 0;
+    }
+
+    // ✅ Get total user count
+    function getUserCount() public view returns (uint) {
+        return userAddresses.length;
+    }
+
+    // ✅ Get unverified users
+    function getUnverifiedUsers() public view returns (address[] memory) {
+        uint count = 0;
+        for (uint i = 0; i < userAddresses.length; i++) {
+            if (!users[userAddresses[i]].isVerified) {
+                count++;
+            }
+        }
+
+        address[] memory unverifiedUsers = new address[](count);
+        uint index = 0;
+
+        for (uint i = 0; i < userAddresses.length; i++) {
+            if (!users[userAddresses[i]].isVerified) {
+                unverifiedUsers[index] = userAddresses[i];
+                index++;
+            }
+        }
+
+        return unverifiedUsers;
+    }
 }
